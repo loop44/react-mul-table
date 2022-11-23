@@ -1,8 +1,28 @@
 const validateField = (fieldName, value, thisObj) => {
-  let { emailValid, passwordValid } = thisObj.state;
+  let { nameValid, emailValid, passwordValid, passwordConfirmValid } = { ...thisObj.state };
   const { formErrors } = thisObj.state;
 
   switch (fieldName) {
+    case 'name':
+      if (value.length === 0) {
+        formErrors.name = 'Name can`t be empty';
+        nameValid = false;
+        break;
+      }
+      if (value.length < 2) {
+        formErrors.name = 'Name is too short';
+        nameValid = false;
+        break;
+      }
+      if (value.length > 20) {
+        formErrors.name = 'Name is too long';
+        nameValid = false;
+        break;
+      }
+
+      formErrors.name = '';
+      nameValid = true;
+      break;
     case 'email':
       if (value.length === 0) {
         formErrors.email = 'Email can`t be empty';
@@ -44,11 +64,24 @@ const validateField = (fieldName, value, thisObj) => {
       formErrors.password = '';
       passwordValid = true;
       break;
+    case 'passwordConfirm':
+      if (value !== thisObj.state.password || value.length === 0) {
+        formErrors.passwordConfirm = 'Passwords not equal';
+        passwordConfirmValid = false;
+        break;
+      }
+
+      formErrors.passwordConfirm = '';
+      passwordConfirmValid = true;
+      break;
     default:
       break;
   }
 
-  thisObj.setState({ formErrors, emailValid, passwordValid }, thisObj.validateForm);
+  thisObj.setState(
+    { formErrors, nameValid, emailValid, passwordValid, passwordConfirmValid },
+    thisObj.validateForm
+  );
 };
 
 export default validateField;
