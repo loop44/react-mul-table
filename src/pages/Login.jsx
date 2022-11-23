@@ -1,6 +1,7 @@
 import React from 'react';
 
 import validateField from '../auth/validateField';
+import { pages } from '../consts/pages';
 
 class Login extends React.Component {
   constructor(props) {
@@ -49,6 +50,8 @@ class Login extends React.Component {
   render() {
     const { email, password, formErrors, emailDirty, passwordDirty, formValid } = this.state;
 
+    const { changePage } = this.props;
+
     return (
       <form className="login" onSubmit={this.submitForm}>
         <h2>Login to account</h2>
@@ -81,7 +84,7 @@ class Login extends React.Component {
           Login
         </button>
         <p className="changeAuthMethod">
-          Need an account? <button>Register</button>
+          Need an account? <button onClick={() => changePage(pages.REGISTER)}>Register</button>
         </p>
       </form>
     );
