@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { pages } from './consts/pages';
+import Game from './pages/Game';
 import Login from './pages/Login';
 import Register from './pages/Register';
 
@@ -34,7 +35,7 @@ class App extends React.Component {
       case pages.REGISTER:
         return <Register changePage={this.changePage} />;
       case pages.GAME:
-        return <p>Game</p>;
+        return <Game />;
 
       default:
         break;

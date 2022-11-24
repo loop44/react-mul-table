@@ -106,7 +106,10 @@ class Login extends React.Component {
             autoComplete="on"
           />
         </div>
-        <button className={`${formValid ? '' : 'error'} ${loading ? 'loading' : ''}`} type="submit">
+        <button
+          className={`${formValid ? '' : 'disabled'} ${loading ? 'loading' : ''}`}
+          type="submit"
+        >
           {loading ? <div className="loader" /> : 'Login'}
         </button>
         <p className="changeAuthMethod">

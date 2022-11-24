@@ -149,7 +149,10 @@ class Register extends React.Component {
             autoComplete="on"
           />
         </div>
-        <button className={`${formValid ? '' : 'error'} ${loading ? 'loading' : ''}`} type="submit">
+        <button
+          className={`${formValid ? '' : 'disabled'} ${loading ? 'loading' : ''}`}
+          type="submit"
+        >
           {loading ? <div className="loader" /> : 'Register'}
         </button>
         <p className="changeAuthMethod">
