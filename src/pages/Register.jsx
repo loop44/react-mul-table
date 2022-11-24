@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { registerUser } from '../auth/requests';
 import validateField from '../auth/validateField';
 import { pages } from '../consts/pages';
 
@@ -19,8 +20,8 @@ class Register extends React.Component {
       nameDirty: false,
       emailDirty: false,
       passwordDirty: false,
-      passwordConfirmDirty: false,
-      formValid: false
+      formValid: false,
+      loading: false
     };
 
     this.handleUserInput = this.handleUserInput.bind(this);
@@ -39,9 +40,11 @@ class Register extends React.Component {
   blurUserInput(e) {
     const { name, value } = e.target;
     validateField(name, value, this);
-    this.setState({
-      [`${name}Dirty`]: true
-    });
+    if (name !== 'passwordConfirm') {
+      this.setState({
+        [`${name}Dirty`]: true
+      });
+    }
   }
 
   validateForm() {
@@ -51,6 +54,30 @@ class Register extends React.Component {
 
   submitForm(e) {
     e.preventDefault();
+    const { name, email, password, passwordConfirm, formValid } = this.state;
+
+    if (name && email && password && passwordConfirm && formValid) {
+      this.setState({
+        loading: true
+      });
+      registerUser({
+        name,
+        email,
+        password,
+        password_confirmation: passwordConfirm
+      })
+        .then((res) => {
+          if (res.status) {
+            const { changePage } = this.props;
+            changePage(pages.LOGIN);
+          }
+        })
+        .finally(() => {
+          this.setState({
+            loading: false
+          });
+        });
+    }
   }
 
   render() {
@@ -63,14 +90,14 @@ class Register extends React.Component {
       nameDirty,
       emailDirty,
       passwordDirty,
-      passwordConfirmDirty,
-      formValid
+      formValid,
+      loading
     } = this.state;
 
     const { changePage } = this.props;
 
     return (
-      <form className="login" onSubmit={this.submitForm}>
+      <form className="authForm" onSubmit={this.submitForm}>
         <h2>Register new account</h2>
         <div className={nameDirty && formErrors.name ? 'error input-block' : 'input-block'}>
           <p className="validation-error">{nameDirty && formErrors.name}</p>
@@ -109,14 +136,10 @@ class Register extends React.Component {
             autoComplete="on"
           />
         </div>
-        <div
-          className={
-            passwordConfirmDirty && formErrors.passwordConfirm ? 'error input-block' : 'input-block'
-          }
-        >
-          <p className="validation-error">{passwordConfirmDirty && formErrors.passwordConfirm}</p>
+        <div className={formErrors.passwordConfirm ? 'error input-block' : 'input-block'}>
+          <p className="validation-error">{formErrors.passwordConfirm}</p>
           <input
-            className={passwordConfirmDirty && formErrors.passwordConfirm ? 'error' : ''}
+            className={formErrors.passwordConfirm ? 'error' : ''}
             value={passwordConfirm}
             onChange={this.handleUserInput}
             onBlur={this.blurUserInput}
@@ -126,8 +149,8 @@ class Register extends React.Component {
             autoComplete="on"
           />
         </div>
-        <button className={!formValid ? 'error' : ''} type="submit">
-          Register
+        <button className={`${formValid ? '' : 'error'} ${loading ? 'loading' : ''}`} type="submit">
+          {loading ? <div className="loader" /> : 'Register'}
         </button>
         <p className="changeAuthMethod">
           Already have an account? <button onClick={() => changePage(pages.LOGIN)}>Login</button>

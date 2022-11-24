@@ -60,6 +60,17 @@ const validateField = (fieldName, value, thisObj) => {
         passwordValid = false;
         break;
       }
+      if (value !== thisObj.state.passwordConfirm && thisObj.state.passwordConfirm?.length > 0) {
+        formErrors.passwordConfirm = 'Passwords not equal';
+        passwordConfirmValid = false;
+        break;
+      } else if (
+        value === thisObj.state.passwordConfirm &&
+        thisObj.state.passwordConfirm.length > 0
+      ) {
+        formErrors.passwordConfirm = '';
+        passwordConfirmValid = true;
+      }
 
       formErrors.password = '';
       passwordValid = true;

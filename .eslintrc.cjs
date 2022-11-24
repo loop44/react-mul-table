@@ -21,6 +21,8 @@ module.exports = {
         unnamedComponents: 'arrow-function'
       }
     ],
+    'no-alert': 0,
+    'no-unused-expressions': 0,
     'import/prefer-default-export': 0,
     'react/jsx-props-no-spreading': 0,
     'react/require-default-props': 0,

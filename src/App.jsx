@@ -14,6 +14,12 @@ class App extends React.Component {
     this.changePage = this.changePage.bind(this);
   }
 
+  componentDidMount() {
+    if (localStorage.getItem('access_token')) {
+      this.changePage(pages.GAME);
+    }
+  }
+
   changePage(page) {
     this.setState({
       page

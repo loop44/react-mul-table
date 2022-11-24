@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { loginUser } from '../auth/requests';
 import validateField from '../auth/validateField';
 import { pages } from '../consts/pages';
 
@@ -14,7 +15,8 @@ class Login extends React.Component {
       passwordValid: false,
       emailDirty: false,
       passwordDirty: false,
-      formValid: false
+      formValid: false,
+      loading: false
     };
 
     this.handleUserInput = this.handleUserInput.bind(this);
@@ -45,15 +47,39 @@ class Login extends React.Component {
 
   submitForm(e) {
     e.preventDefault();
+    const { email, password, formValid } = this.state;
+
+    if (email && password && formValid) {
+      this.setState({
+        loading: true
+      });
+      loginUser({
+        email,
+        password
+      })
+        .then((res) => {
+          if (res.status) {
+            const { changePage } = this.props;
+            localStorage.setItem('access_token', res.data.access_token);
+            changePage(pages.GAME);
+          }
+        })
+        .finally(() => {
+          this.setState({
+            loading: false
+          });
+        });
+    }
   }
 
   render() {
-    const { email, password, formErrors, emailDirty, passwordDirty, formValid } = this.state;
+    const { email, password, formErrors, emailDirty, passwordDirty, formValid, loading } =
+      this.state;
 
     const { changePage } = this.props;
 
     return (
-      <form className="login" onSubmit={this.submitForm}>
+      <form className="authForm" onSubmit={this.submitForm}>
         <h2>Login to account</h2>
         <div className={emailDirty && formErrors.email ? 'error input-block' : 'input-block'}>
           <p className="validation-error">{emailDirty && formErrors.email}</p>
@@ -80,8 +106,8 @@ class Login extends React.Component {
             autoComplete="on"
           />
         </div>
-        <button className={!formValid ? 'error' : ''} type="submit">
-          Login
+        <button className={`${formValid ? '' : 'error'} ${loading ? 'loading' : ''}`} type="submit">
+          {loading ? <div className="loader" /> : 'Login'}
         </button>
         <p className="changeAuthMethod">
           Need an account? <button onClick={() => changePage(pages.REGISTER)}>Register</button>
