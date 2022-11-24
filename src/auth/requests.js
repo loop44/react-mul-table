@@ -43,7 +43,7 @@ export const loginUser = async (user) => {
 export const startGame = async (difficult) => {
   try {
     const body = {
-      type_hard: difficult,
+      type_hard: Number(difficult),
       type: 1
     };
     const response = await fetch('https://internsapi.public.osora.ru/api/game/play', {
@@ -59,5 +59,28 @@ export const startGame = async (difficult) => {
     return result;
   } catch (error) {
     alert(error.message);
+  }
+};
+
+export const setAnswer = async (answer) => {
+  try {
+    const body = {
+      answer: Number(answer.value),
+      type_hard: Number(answer.difficult),
+      type: 2
+    };
+    const response = await fetch('https://internsapi.public.osora.ru/api/game/play', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`
+      },
+      body: JSON.stringify(body)
+    });
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    return new Error(`${error.message} try to choose answer one more time`);
   }
 };

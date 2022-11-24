@@ -160,6 +160,43 @@ button[type='button'] {
   align-self: center;
 }
 
+button[type='button'].loading {
+  background-color: #c2c2c2;
+  outline: none;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 button[type='button']:hover {
   background-color: #ebebeb;
+}
+
+button[type='button'].loading:hover {
+  background-color: #c2c2c2;
+}
+
+.playground {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.playground p {
+  font-size: 20px;
+}
+
+.playground span {
+  font-weight: 700;
+}
+
+.options {
+  display: flex;
+  gap: 5px;
+}
+
+.playgroundInput {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }

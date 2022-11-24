@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { startGame } from '../../auth/requests';
+import { gamePages } from '../../consts/gamePages';
 
 class Start extends React.Component {
   constructor(props) {
@@ -22,14 +23,24 @@ class Start extends React.Component {
   submitForm(e) {
     e.preventDefault();
     const { selectedValue } = this.state;
+    const { setGameData, changeGamePage } = this.props;
+
     if (selectedValue) {
       this.setState({
         loading: true
       });
       startGame(selectedValue)
-        // .then((res) => {
-        //   console.log(res);
-        // })
+        .then((res) => {
+          const { status, type, data } = res;
+
+          if (status && type === 'start') {
+            setGameData({
+              difficult: selectedValue,
+              ...data
+            });
+            changeGamePage(gamePages.GAME);
+          }
+        })
         .finally(() => {
           this.setState({
             loading: false
@@ -46,13 +57,13 @@ class Start extends React.Component {
         <h2>Select difficult</h2>
         <select id="difficulty-select" defaultValue="-" onChange={this.handleSelect}>
           <option value="-" disabled hidden>
-            Choose difficulty
+            Choose difficult
           </option>
           <option value="1">Easy</option>
           <option value="2">Hard</option>
         </select>
         <button className={`${selectedValue ? '' : 'disabled'}`} type="submit">
-          {loading ? <div className="loader" /> : 'Login'}
+          {loading ? <div className="loader" /> : 'Start'}
         </button>
       </form>
     );
