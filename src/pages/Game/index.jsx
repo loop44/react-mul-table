@@ -32,10 +32,17 @@ class Game extends React.Component {
 
   render() {
     const { page, gameData } = this.state;
+    const { signOut } = this.props;
 
     switch (page) {
       case gamePages.START:
-        return <Start setGameData={this.setGameData} changeGamePage={this.changeGamePage} />;
+        return (
+          <Start
+            setGameData={this.setGameData}
+            changeGamePage={this.changeGamePage}
+            signOut={signOut}
+          />
+        );
       case gamePages.GAME:
         return (
           <Playground

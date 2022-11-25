@@ -75,7 +75,7 @@ class Playground extends React.Component {
         }
       })
       .catch((err) => {
-        alert(err);
+        alert(err.message);
         this.startTimer();
       })
       .finally(() => {

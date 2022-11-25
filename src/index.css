@@ -243,6 +243,12 @@ button[type='button'].loading:hover {
   font-weight: 700;
 }
 
+.logOut {
+  position: fixed;
+  right: 50px;
+  bottom: 50px;
+}
+
 @media (max-height: 830px) {
   .result {
     align-self: flex-start;

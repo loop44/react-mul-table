@@ -10,11 +10,11 @@ export const registerUser = async (user) => {
 
     const result = await response.json();
     if (result.errors) {
-      alert(Object.values(result.errors)?.[0]?.[0]) || 'Failed to Register';
+      throw new Error(Object.values(result.errors)?.[0]?.[0] || 'Failed to Register');
     }
     return result;
   } catch (error) {
-    alert(error.message);
+    throw new Error(error.message);
   }
 };
 
@@ -30,13 +30,14 @@ export const loginUser = async (user) => {
 
     const result = await response.json();
     if (result.errors === 'Unauthorized') {
-      alert('Invalid login or password');
-    } else if (result.errors) {
-      alert('Failed to login');
+      throw new Error('Invalid login or password');
+    }
+    if (result.errors) {
+      throw new Error('Failed to login');
     }
     return result;
   } catch (error) {
-    alert(error.message);
+    throw new Error(error.message);
   }
 };
 
@@ -58,7 +59,7 @@ export const startGame = async (difficult) => {
     const result = await response.json();
     return result;
   } catch (error) {
-    alert(error.message);
+    throw new Error(error.message);
   }
 };
 
@@ -81,6 +82,6 @@ export const setAnswer = async (answer) => {
     const result = await response.json();
     return result;
   } catch (error) {
-    return new Error(`${error.message} try to choose answer one more time`);
+    throw new Error(`${error.message}. Try to choose answer one more time`);
   }
 };

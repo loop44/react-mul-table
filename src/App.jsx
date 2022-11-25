@@ -13,6 +13,7 @@ class App extends React.Component {
     };
 
     this.changePage = this.changePage.bind(this);
+    this.signOut = this.signOut.bind(this);
   }
 
   componentDidMount() {
@@ -27,6 +28,11 @@ class App extends React.Component {
     });
   }
 
+  signOut() {
+    localStorage.removeItem('access_token');
+    this.changePage(pages.LOGIN);
+  }
+
   render() {
     const { page } = this.state;
     switch (page) {
@@ -35,7 +41,7 @@ class App extends React.Component {
       case pages.REGISTER:
         return <Register changePage={this.changePage} />;
       case pages.GAME:
-        return <Game />;
+        return <Game signOut={this.signOut} />;
 
       default:
         break;

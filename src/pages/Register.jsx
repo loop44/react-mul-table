@@ -72,6 +72,9 @@ class Register extends React.Component {
             changePage(pages.LOGIN);
           }
         })
+        .catch((err) => {
+          alert(err.message);
+        })
         .finally(() => {
           this.setState({
             loading: false

@@ -64,6 +64,9 @@ class Login extends React.Component {
             changePage(pages.GAME);
           }
         })
+        .catch((err) => {
+          alert(err.message);
+        })
         .finally(() => {
           this.setState({
             loading: false
