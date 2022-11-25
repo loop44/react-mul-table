@@ -3,6 +3,7 @@ import React from 'react';
 import { gamePages } from '../../consts/gamePages';
 
 import Playground from './Playground';
+import Results from './Results';
 import Start from './Start';
 
 class Game extends React.Component {
@@ -44,7 +45,7 @@ class Game extends React.Component {
           />
         );
       case gamePages.RESULTS:
-        return <h1>Game results</h1>;
+        return <Results changeGamePage={this.changeGamePage} gameData={gameData} />;
 
       default:
         break;

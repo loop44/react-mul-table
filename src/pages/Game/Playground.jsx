@@ -48,7 +48,7 @@ class Playground extends React.Component {
 
   submmitAnswer(e) {
     e.preventDefault();
-    const { gameData, setGameData } = this.props;
+    const { gameData, setGameData, changeGamePage } = this.props;
     const { inputValue } = this.state;
 
     this.setState({
@@ -68,6 +68,10 @@ class Playground extends React.Component {
             difficult: gameData.difficult,
             ...data
           });
+        }
+
+        if (data?.questions) {
+          changeGamePage(gamePages.RESULTS);
         }
       })
       .catch((err) => {
@@ -105,7 +109,14 @@ class Playground extends React.Component {
     const { options, points, question, questions } = gameData;
 
     if (questions) {
-      return <h1>Game over</h1>;
+      return (
+        <div>
+          <h1>Somethin went wrong</h1>
+          <button type="button" onClick={() => changeGamePage(gamePages.START)}>
+            Play again
+          </button>
+        </div>
+      );
     }
 
     return (
