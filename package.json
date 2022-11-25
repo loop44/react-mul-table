@@ -1,6 +1,7 @@
 {
   "name": "react-mul-table-game",
   "private": true,
+  "homepage": "https://loop44.github.io/react-mul-table/",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
@@ -12,9 +13,12 @@
     "prettier": "prettier --check \"**/*.+(js|jsx|ts|tsx|json|yml|yaml|md|css)\"",
     "prettier:fix": "prettier --write \"**/*.+(js|jsx|ts|tsx|json|yml|yaml|md|css)\"",
     "prepare": "husky install",
-    "pre-commit": "lint-staged"
+    "pre-commit": "lint-staged",
+    "deploy": "gh-pages -d dist",
+    "predeploy": "yarn build"
   },
   "dependencies": {
+    "gh-pages": "^4.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
