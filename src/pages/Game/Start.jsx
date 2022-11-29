@@ -1,7 +1,8 @@
 import React from 'react';
 
-import { startGame } from '../../auth/requests';
+import startGame from '../../auth/requests';
 import { gamePages } from '../../consts/gamePages';
+import { reqTypes } from '../../consts/reqTypes';
 
 class Start extends React.Component {
   constructor(props) {
@@ -29,7 +30,7 @@ class Start extends React.Component {
       this.setState({
         loading: true
       });
-      startGame(selectedValue)
+      startGame(selectedValue, reqTypes.GAME_START)
         .then((res) => {
           const { status, type, data } = res;
 

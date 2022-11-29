@@ -1,0 +1,6 @@
+export const reqTypes = {
+  LOGIN: 'LOGIN',
+  REGISTER: 'REGISTER',
+  GAME_START: 'GAME_START',
+  GAME_ANSWER: 'GAME_ANSWER'
+};

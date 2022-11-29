@@ -1,7 +1,8 @@
 import React from 'react';
 
-import { setAnswer } from '../../auth/requests';
+import setAnswer from '../../auth/requests';
 import { gamePages } from '../../consts/gamePages';
+import { reqTypes } from '../../consts/reqTypes';
 
 class Playground extends React.Component {
   constructor(props) {
@@ -57,10 +58,13 @@ class Playground extends React.Component {
 
     this.stopTimer();
 
-    setAnswer({
-      value: e.type === 'click' ? e.currentTarget.innerText : inputValue,
-      difficult: gameData.difficult
-    })
+    setAnswer(
+      {
+        value: e.type === 'click' ? e.currentTarget.innerText : inputValue,
+        difficult: gameData.difficult
+      },
+      reqTypes.GAME_ANSWER
+    )
       .then((res) => {
         const { status, type, data } = res;
         if (status && type === 'game') {

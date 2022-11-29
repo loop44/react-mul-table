@@ -1,8 +1,9 @@
 import React from 'react';
 
-import { registerUser } from '../auth/requests';
+import registerUser from '../auth/requests';
 import validateField from '../auth/validateField';
 import { pages } from '../consts/pages';
+import { reqTypes } from '../consts/reqTypes';
 
 class Register extends React.Component {
   constructor(props) {
@@ -60,12 +61,15 @@ class Register extends React.Component {
       this.setState({
         loading: true
       });
-      registerUser({
-        name,
-        email,
-        password,
-        password_confirmation: passwordConfirm
-      })
+      registerUser(
+        {
+          name,
+          email,
+          password,
+          password_confirmation: passwordConfirm
+        },
+        reqTypes.REGISTER
+      )
         .then((res) => {
           if (res.status) {
             const { changePage } = this.props;

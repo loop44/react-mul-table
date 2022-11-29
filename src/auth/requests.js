@@ -1,31 +1,53 @@
-export const registerUser = async (user) => {
-  try {
-    const response = await fetch('https://internsapi.public.osora.ru/api/auth/signup', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json;charset=utf-8'
-      },
-      body: JSON.stringify(user)
-    });
+import { reqTypes } from '../consts/reqTypes';
 
-    const result = await response.json();
-    if (result.errors) {
-      throw new Error(Object.values(result.errors)?.[0]?.[0] || 'Failed to Register');
-    }
-    return result;
-  } catch (error) {
-    throw new Error(error.message);
+const baseUrl = 'https://internsapi.public.osora.ru/api/';
+
+const createUrl = (reqType) => {
+  switch (reqType) {
+    case reqTypes.LOGIN:
+      return `${baseUrl}auth/login`;
+    case reqTypes.REGISTER:
+      return `${baseUrl}auth/signup`;
+    case reqTypes.GAME_START:
+    case reqTypes.GAME_ANSWER:
+      return `${baseUrl}game/play`;
+
+    default:
+      throw new Error('Something went wrong');
   }
 };
 
-export const loginUser = async (user) => {
+const createBody = (reqData, reqType) => {
+  switch (reqType) {
+    case reqTypes.LOGIN:
+    case reqTypes.REGISTER:
+      return reqData;
+    case reqTypes.GAME_START:
+      return {
+        type_hard: Number(reqData),
+        type: 1
+      };
+    case reqTypes.GAME_ANSWER:
+      return {
+        answer: Number(reqData.value),
+        type_hard: Number(reqData.difficult),
+        type: 2
+      };
+
+    default:
+      throw new Error('Something went wrong');
+  }
+};
+
+export default async (reqData, reqType) => {
   try {
-    const response = await fetch('https://internsapi.public.osora.ru/api/auth/login', {
+    const response = await fetch(createUrl(reqType), {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json;charset=utf-8'
+        'Content-Type': 'application/json;charset=utf-8',
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`
       },
-      body: JSON.stringify(user)
+      body: JSON.stringify(createBody(reqData, reqType))
     });
 
     const result = await response.json();
@@ -33,55 +55,10 @@ export const loginUser = async (user) => {
       throw new Error('Invalid login or password');
     }
     if (result.errors) {
-      throw new Error('Failed to login');
+      throw new Error(Object.values(result.errors)?.[0]?.[0] || 'Failed to fetch');
     }
     return result;
   } catch (error) {
     throw new Error(error.message);
-  }
-};
-
-export const startGame = async (difficult) => {
-  try {
-    const body = {
-      type_hard: Number(difficult),
-      type: 1
-    };
-    const response = await fetch('https://internsapi.public.osora.ru/api/game/play', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json;charset=utf-8',
-        Authorization: `Bearer ${localStorage.getItem('access_token')}`
-      },
-      body: JSON.stringify(body)
-    });
-
-    const result = await response.json();
-    return result;
-  } catch (error) {
-    throw new Error(error.message);
-  }
-};
-
-export const setAnswer = async (answer) => {
-  try {
-    const body = {
-      answer: Number(answer.value),
-      type_hard: Number(answer.difficult),
-      type: 2
-    };
-    const response = await fetch('https://internsapi.public.osora.ru/api/game/play', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json;charset=utf-8',
-        Authorization: `Bearer ${localStorage.getItem('access_token')}`
-      },
-      body: JSON.stringify(body)
-    });
-
-    const result = await response.json();
-    return result;
-  } catch (error) {
-    throw new Error(`${error.message}. Try to choose answer one more time`);
   }
 };

@@ -1,8 +1,9 @@
 import React from 'react';
 
-import { loginUser } from '../auth/requests';
+import loginUser from '../auth/requests';
 import validateField from '../auth/validateField';
 import { pages } from '../consts/pages';
+import { reqTypes } from '../consts/reqTypes';
 
 class Login extends React.Component {
   constructor(props) {
@@ -53,10 +54,13 @@ class Login extends React.Component {
       this.setState({
         loading: true
       });
-      loginUser({
-        email,
-        password
-      })
+      loginUser(
+        {
+          email,
+          password
+        },
+        reqTypes.LOGIN
+      )
         .then((res) => {
           if (res.status) {
             const { changePage } = this.props;
