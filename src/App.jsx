@@ -1,52 +1,69 @@
 import React from 'react';
+import { Route, Routes } from 'react-router-dom';
 
-import { pages } from './consts/pages';
-import Game from './pages/Game';
+import { RequireAuth } from './hoc/RequireAuth';
+import { RequireGameData } from './hoc/RequireGameData';
+import { withRouter } from './hoc/withRouter';
 import Login from './pages/Login';
+import Playground from './pages/Playground';
 import Register from './pages/Register';
+import Results from './pages/Results';
+import Start from './pages/Start';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      page: pages.LOGIN
+      gameData: null
     };
 
-    this.changePage = this.changePage.bind(this);
-    this.signOut = this.signOut.bind(this);
+    this.setGameData = this.setGameData.bind(this);
   }
 
-  componentDidMount() {
-    if (localStorage.getItem('access_token')) {
-      this.changePage(pages.GAME);
-    }
-  }
-
-  changePage(page) {
+  setGameData(data) {
     this.setState({
-      page
+      gameData: data
     });
   }
 
-  signOut() {
-    localStorage.removeItem('access_token');
-    this.changePage(pages.LOGIN);
-  }
-
   render() {
-    const { page } = this.state;
-    switch (page) {
-      case pages.LOGIN:
-        return <Login changePage={this.changePage} />;
-      case pages.REGISTER:
-        return <Register changePage={this.changePage} />;
-      case pages.GAME:
-        return <Game signOut={this.signOut} />;
+    const { gameData } = this.state;
 
-      default:
-        break;
-    }
+    return (
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <RequireAuth>
+              <Start setGameData={this.setGameData} />
+            </RequireAuth>
+          }
+        />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route
+          path="/game"
+          element={
+            <RequireAuth>
+              <RequireGameData setGameData={this.setGameData} gameData={gameData}>
+                <Playground />
+              </RequireGameData>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/result"
+          element={
+            <RequireAuth>
+              <RequireGameData gameData={gameData}>
+                <Results />
+              </RequireGameData>
+            </RequireAuth>
+          }
+        />
+      </Routes>
+    );
   }
 }
 
-export default App;
+export default withRouter(App);

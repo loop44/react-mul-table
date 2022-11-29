@@ -1,9 +1,11 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import loginUser from '../auth/requests';
 import validateField from '../auth/validateField';
-import { pages } from '../consts/pages';
 import { reqTypes } from '../consts/reqTypes';
+import { AuthContext } from '../hoc/AuthProvider';
+import { withRouter } from '../hoc/withRouter';
 
 class Login extends React.Component {
   constructor(props) {
@@ -49,6 +51,8 @@ class Login extends React.Component {
   submitForm(e) {
     e.preventDefault();
     const { email, password, formValid } = this.state;
+    const { navigate } = this.props;
+    const { signin } = this.context;
 
     if (email && password && formValid) {
       this.setState({
@@ -63,9 +67,8 @@ class Login extends React.Component {
       )
         .then((res) => {
           if (res.status) {
-            const { changePage } = this.props;
-            localStorage.setItem('access_token', res.data.access_token);
-            changePage(pages.GAME);
+            signin(res.data.access_token);
+            navigate('/', { replace: true });
           }
         })
         .catch((err) => {
@@ -82,8 +85,6 @@ class Login extends React.Component {
   render() {
     const { email, password, formErrors, emailDirty, passwordDirty, formValid, loading } =
       this.state;
-
-    const { changePage } = this.props;
 
     return (
       <form className="authForm" onSubmit={this.submitForm}>
@@ -120,11 +121,16 @@ class Login extends React.Component {
           {loading ? <div className="loader" /> : 'Login'}
         </button>
         <p className="changeAuthMethod">
-          Need an account? <button onClick={() => changePage(pages.REGISTER)}>Register</button>
+          Need an account?{' '}
+          <Link to="/register">
+            <button>Register</button>
+          </Link>
         </p>
       </form>
     );
   }
 }
 
-export default Login;
+Login.contextType = AuthContext;
+
+export default withRouter(Login);

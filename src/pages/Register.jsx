@@ -1,9 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import registerUser from '../auth/requests';
 import validateField from '../auth/validateField';
-import { pages } from '../consts/pages';
 import { reqTypes } from '../consts/reqTypes';
+import { withRouter } from '../hoc/withRouter';
 
 class Register extends React.Component {
   constructor(props) {
@@ -56,6 +57,7 @@ class Register extends React.Component {
   submitForm(e) {
     e.preventDefault();
     const { name, email, password, passwordConfirm, formValid } = this.state;
+    const { navigate } = this.props;
 
     if (name && email && password && passwordConfirm && formValid) {
       this.setState({
@@ -72,8 +74,7 @@ class Register extends React.Component {
       )
         .then((res) => {
           if (res.status) {
-            const { changePage } = this.props;
-            changePage(pages.LOGIN);
+            navigate('/login', { replace: true });
           }
         })
         .catch((err) => {
@@ -100,8 +101,6 @@ class Register extends React.Component {
       formValid,
       loading
     } = this.state;
-
-    const { changePage } = this.props;
 
     return (
       <form className="authForm" onSubmit={this.submitForm}>
@@ -163,11 +162,14 @@ class Register extends React.Component {
           {loading ? <div className="loader" /> : 'Register'}
         </button>
         <p className="changeAuthMethod">
-          Already have an account? <button onClick={() => changePage(pages.LOGIN)}>Login</button>
+          Already have an account?{' '}
+          <Link to="/login">
+            <button>Login</button>
+          </Link>
         </p>
       </form>
     );
   }
 }
 
-export default Register;
+export default withRouter(Register);

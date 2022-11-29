@@ -1,8 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
-import setAnswer from '../../auth/requests';
-import { gamePages } from '../../consts/gamePages';
-import { reqTypes } from '../../consts/reqTypes';
+import setAnswer from '../auth/requests';
+import { reqTypes } from '../consts/reqTypes';
+import { withRouter } from '../hoc/withRouter';
 
 class Playground extends React.Component {
   constructor(props) {
@@ -49,7 +50,7 @@ class Playground extends React.Component {
 
   submmitAnswer(e) {
     e.preventDefault();
-    const { gameData, setGameData, changeGamePage } = this.props;
+    const { gameData, setGameData } = this.props;
     const { inputValue } = this.state;
 
     this.setState({
@@ -67,6 +68,8 @@ class Playground extends React.Component {
     )
       .then((res) => {
         const { status, type, data } = res;
+        const { navigate } = this.props;
+
         if (status && type === 'game') {
           setGameData({
             difficult: gameData.difficult,
@@ -75,7 +78,7 @@ class Playground extends React.Component {
         }
 
         if (data?.questions) {
-          changeGamePage(gamePages.RESULTS);
+          navigate('/result');
         }
       })
       .catch((err) => {
@@ -109,16 +112,16 @@ class Playground extends React.Component {
 
   render() {
     const { timeLeft, inputValue, loading } = this.state;
-    const { gameData, changeGamePage } = this.props;
+    const { gameData } = this.props;
     const { options, points, question, questions } = gameData;
 
     if (questions) {
       return (
         <div>
-          <h1>Somethin went wrong</h1>
-          <button type="button" onClick={() => changeGamePage(gamePages.START)}>
-            Play again
-          </button>
+          <h1>Something went wrong</h1>
+          <Link to="/">
+            <button type="button">Play again</button>
+          </Link>
         </div>
       );
     }
@@ -156,12 +159,12 @@ class Playground extends React.Component {
             </button>
           </form>
         )}
-        <button type="button" onClick={() => changeGamePage(gamePages.START)}>
-          Go Back
-        </button>
+        <Link to="/">
+          <button type="button">Go Back</button>
+        </Link>
       </div>
     );
   }
 }
 
-export default Playground;
+export default withRouter(Playground);

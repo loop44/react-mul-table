@@ -1,8 +1,9 @@
 import React from 'react';
 
-import startGame from '../../auth/requests';
-import { gamePages } from '../../consts/gamePages';
-import { reqTypes } from '../../consts/reqTypes';
+import startGame from '../auth/requests';
+import { reqTypes } from '../consts/reqTypes';
+import { AuthContext } from '../hoc/AuthProvider';
+import { withRouter } from '../hoc/withRouter';
 
 class Start extends React.Component {
   constructor(props) {
@@ -24,7 +25,7 @@ class Start extends React.Component {
   submitForm(e) {
     e.preventDefault();
     const { selectedValue } = this.state;
-    const { setGameData, changeGamePage } = this.props;
+    const { setGameData, navigate } = this.props;
 
     if (selectedValue) {
       this.setState({
@@ -39,7 +40,7 @@ class Start extends React.Component {
               difficult: selectedValue,
               ...data
             });
-            changeGamePage(gamePages.GAME);
+            navigate('/game');
           }
         })
         .catch((err) => {
@@ -55,8 +56,7 @@ class Start extends React.Component {
 
   render() {
     const { selectedValue, loading } = this.state;
-    const { signOut } = this.props;
-
+    const { signout } = this.context;
     return (
       <form className="difficultyForm" onSubmit={this.submitForm}>
         <h2>Select difficult</h2>
@@ -70,9 +70,8 @@ class Start extends React.Component {
         <button className={`${selectedValue ? '' : 'disabled'}`} type="submit">
           {loading ? <div className="loader" /> : 'Start'}
         </button>
-
         <svg
-          onClick={signOut}
+          onClick={() => signout()}
           className="logOut"
           width="30"
           height="30"
@@ -93,4 +92,6 @@ class Start extends React.Component {
   }
 }
 
-export default Start;
+Start.contextType = AuthContext;
+
+export default withRouter(Start);

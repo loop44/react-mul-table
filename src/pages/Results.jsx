@@ -1,7 +1,8 @@
-import { gamePages } from '../../consts/gamePages';
+import { withRouter } from '../hoc/withRouter';
 
-const Results = ({ changeGamePage, gameData }) => {
+const Results = ({ navigate, gameData }) => {
   const gameTypes = ['Easy', 'Hard'];
+
   return (
     <div className="result">
       <h2>Game results</h2>
@@ -28,11 +29,11 @@ const Results = ({ changeGamePage, gameData }) => {
           </div>
         ))}
       </div>
-      <button type="button" onClick={() => changeGamePage(gamePages.START)}>
+      <button type="button" onClick={() => navigate('/')}>
         Play again
       </button>
     </div>
   );
 };
 
-export default Results;
+export default withRouter(Results);
